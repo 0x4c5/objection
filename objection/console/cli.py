@@ -21,6 +21,7 @@ def get_agent() -> Agent:
         name=state_connection.name,
         host=state_connection.host,
         port=state_connection.port,
+        token=state_connection.token,
         device_type=state_connection.device_type,
         device_id=state_connection.device_id,
         spawn=state_connection.spawn,
@@ -41,6 +42,7 @@ def get_agent() -> Agent:
               show_default=True)
 @click.option('--host', '-h', default='127.0.0.1', show_default=True)
 @click.option('--port', '-p', required=False, default=27042, show_default=True)
+@click.option('--token', default='', required=False, show_default=True)
 @click.option('--api-host', '-ah', default='127.0.0.1', show_default=True)
 @click.option('--api-port', '-ap', required=False, default=8888, show_default=True)
 @click.option('--name', '-n', required=False,
@@ -53,7 +55,7 @@ def get_agent() -> Agent:
 @click.option('--foremost', '-f', required=False, is_flag=True, help='Use the current foremost application.')
 @click.option('--debugger', required=False, default=False, is_flag=True, help='Enable the Chrome debug port.')
 @click.option('--uid', required=False, default=None, help='Specify the uid to run as (Android only).')
-def cli(network: bool, host: str, port: int, api_host: str, api_port: int,
+def cli(network: bool, host: str, port: int, token: str, api_host: str, api_port: int,
         name: str, serial: str, debug: bool, spawn: bool, no_pause: bool, 
         foremost: bool, debugger: bool, uid: int) -> None:
     """
@@ -75,6 +77,7 @@ def cli(network: bool, host: str, port: int, api_host: str, api_port: int,
         state_connection.use_network()
         state_connection.host = host
         state_connection.port = port
+        state_connection.token = token
 
     if serial:
         state_connection.device_id = serial
@@ -90,7 +93,7 @@ def cli(network: bool, host: str, port: int, api_host: str, api_port: int,
     state_connection.debugger = debugger
     state_connection.uid = uid
 
-
+ 
 @cli.command()
 def api():
     """
@@ -244,7 +247,7 @@ def patchipa(source: str, gadget_version: str, codesign_signature: str, provisio
 
     patch_ios_ipa(**locals())
 
-
+ 
 @cli.command()
 @click.option('--source', '-s', help='The source APK to patch', required=True)
 @click.option('--architecture', '-a',

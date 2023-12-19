@@ -23,6 +23,7 @@ class AgentConfig(object):
     name: str
     host: str = None
     port: int = None
+    token: str = ""
     device_type: str = 'usb'
     device_id: str = None
     foremost: bool = False
@@ -168,8 +169,10 @@ class Agent(object):
             else:
                 host = self.config.host
                 port = self.config.port
+                token = self.config.token 
                 self.device = frida.get_device_manager() \
-                    .add_remote_device(f'{host}:{port}' if host is not None else f'127.0.0.1:{port}')
+                    .add_remote_device(f'{host}:{port}' if host is not None else f'127.0.0.1:{port}', token=token)
+                debug_print(f'remote device as -> {host}:{port} --token {token}')
 
         elif self.config.device_type is not None:
             for dev in frida.enumerate_devices():

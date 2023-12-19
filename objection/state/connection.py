@@ -12,6 +12,7 @@ class StateConnection(object):
         self.port = None
         self.device_type = 'usb'
         self.device_id = None
+        self.token = ""
 
         self.spawn = False
         self.no_pause = False
